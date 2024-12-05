@@ -33,6 +33,9 @@ Comment on key features of the pipeline, such as compatibility with different to
 
 An advantage of the piepline is that if the user already ahve th fastq files i its computer and decides not to use the piple for not 
 downlading them, it can diretly use this pieleien too, actually saving pipeline time. See [Customize Pipeline](#customize-pipeline)
+
+Adjvantage of this. pipline is that because of the nature of nextfkow parallelisms, once reads from a specific region are 
+aligns it starts wotj 
 # Requirements
 
 The software dependencies in order to run this pipeline are the following:
@@ -62,9 +65,19 @@ If you want to adjust the resource allocations for this pipeline, refer to the [
 
 
 # Installation
+Open your terminal and placed yourself in the directory where you want to save this github repository.
+Now clone the this github repository:
 
-Step-by-step instructions to set up the pipeline.Instructions for 
-- cloning the repository and setting up the environment.
+``
+git clone https://github.com/Amisor/SNVcalling_Nextflow.git
+``
+Change your working directory to the GitHub repository with the following command:
+
+``
+cd SNVcalling_Nextflow
+``
+
+Before running the project iwht the example data, please see seciton XX to see current structure and expected autputs
 
 # Data
 This section specifies the required input files and the expected output files for running the Nextflow pipeline.
@@ -92,7 +105,7 @@ The output files include:
 - **Alignment Files**: Intermediate `.sam` files, which are processed to remove PCR duplicates and generate the final BAM files, are stored in the [Alignment](data/Alignment) directory.
 - **BAM Files**: Aligned FASTQ files to the reference genome, with PCR duplicates removed (`.bam`), are stored in the [BAM](data/BAM) directory.
 - **SNVs and Indels**: Final variant call files (`.vcf.gz`) are stored in the [SNV](data/SNV) directory.
-
+_ ****
 ## Example Datasets 
 
 For this project, Drosophila melanogaster (fruit fly) data was used for testing. 
@@ -104,8 +117,8 @@ All samples consist of short-read paired-end sequences from Drosophila melanogas
 If detailed information about the data is available, such as the specific country, it is stored in the region variable. However, if the data lacks such granularity, only the continent is stored.
 
 Unfortunately, no short-read sequencing genomes generated on the Illumina platform were found for South America. 
-The majority of datasets available from this region were produced using long-read sequencing technologies, 
-such as the dataset from Peru (SRR7816670). Only one dataset from Chile (SRR21942766) was generated using the Illumina HiSeq 2500, 
+The majority of datasets from this region were produced using long-read sequencing technologies, 
+such as Peru (SRR7816670). One dataset from Chile (SRR21942766) was generated using the Illumina HiSeq 2500, 
 but it is based on ATAC-seq rather than WGS, making it unsuitable for single nucleotide variant (SNV) calling.
 ATAC-seq focuses on open chromatin regions, and while it may detect some SNV in these areas, 
 the data is inherently biased and lacks comprehensive genome coverage. 
@@ -124,9 +137,134 @@ Table 1: Overview of datasets used in the pipeline, including region, sequencing
 | Central Africa  | SRR21854039          | 46,871,379   | 11.7G      | 4.4Gb| 2022-10-12  | Illumina HiSeq 4000 | WGS      | Paired  | adult             | SAMN30837313    |
 | West Africa     | ERR9463903           | 35,724,955   | 10.3G      | 3.2Gb| 2024-07-29  | Illumina NovaSeq 6000| WGS      | Paired  | adult             | SAMEA13793122   |
 
+The reader will notice that the size of each original FASTQ file is quite large. 
+To test the pipeline efficiently, I downloaded each FASTQ file and created smaller test files by extracting only the first 40,000 lines 
+from each paired FASTQ file for every region. This results in 10,000 sequences per file 
+(since a FASTQ file consists of 4 lines per sequence: sequence ID, nucleotide sequence, separator, and Phred quality scores).
 
-## Results and Visualization
+The smaller test files were compressed and used as input for the pipeline. The code to generate these smaller FASTQ files is not part of the pipeline; 
+it was executed separately to prepare the desired test files for pipeline functionality.
 
+An example of this process for the Australia dataset is provided below:
+
+```bash
+region="Australia"
+sra_num="SRR17978916"
+
+# Download the FASTQ files using fastq-dump
+fastq-dump --split-files ${sra_num}
+
+# Obtain the first 10,000 sequences (40,000 lines) from the first FASTQ file
+head -n 40000 ${sra_num}_1.fastq > ${region}_${sra_num}_1.fastq
+gzip ${region}_${sra_num}_1.fastq
+
+# Obtain the first 10,000 sequences (40,000 lines) from the second FASTQ file
+head -n 40000 ${sra_num}_2.fastq > ${region}_${sra_num}_2.fastq
+gzip ${region}_${sra_num}_2.fastq
+```
+This will produce the desired compressed files: `${region}_${sra_num}_1.fastq.gz` and `${region}_${sra_num}_2.fastq.gz`.
+
+The reader may have the following questions:
+**Can I use the pipeline with downloading or without downloading the FASTQ files?**
+Yes. The pipeline originally is designed to download the FASTQ files. However,
+you can download the fastq files and placed them inside the [FASTQ](data/FASTQ) directory .
+They automallycally will be used as an input for subsequent processes, but you have to keep in mind to modify acquertly 
+the workflow of the pipeline. See  [Customize Pipeline](#customize-pipeline) 
+
+**How can I test the DownloadFastq process of the pipeline?**
+
+Because orignal fastq files are large, I added a `sra_list_fastq_example.tsv` inside [data](data) 
+file for downloading fastq files from two example regions with their respective sra accesion number whose sizes
+are muhc more smaller. The example download w paired-fastq files files from Bordatella hinzi fastq files. 
+The reader will noticed that the example employs DownloadFastqExample instead of DownloadFastq process. 
+The reason is because DownloadFastq save the files inside [FASTQ](data/FASTQ) directory, which then will be sued
+for the upcoming processes, while DownloadFastqExample has the same script as DownloadFastq  but do not publish the results 
+in the FASTQ directory. I decided to to this because if I used the same process (DownloadFastq), the Bordetella hinzi files
+would be aslso used for theAlignReads process and all the upcomong processes, which is is not only bioligcal nonsense 
+(reference from drosophilia and fastq files from bordetella), but also memorry consuming. 
+
+If the user wnat so use the original DownloadFastq with the publish dear, please be aware that it's memory requirement edepends on
+the desired fifiles to download and if the process exceds the limits set in the nextflow.config, 
+the user has to modify the configuration file. Additionally, has to ensure that its equipment ahs enough memory
+to donwload and compress the desire files.
+
+# Running the pipeline
+
+When you clone the github repository, you´ll have the following directories: 
+
+```plaintext
+SNVcalling_Nextflow/
+├── data/
+|   ├── [some directories and files]
+├── modules/
+|   ├── [some directories and files]
+├── main.nf
+├── nextflow.config
+```
+
+Let's zoom in into the data directory. 
+
+```plaintext
+data/
+├── Alignment/
+|   ├── [empty]
+├── BAM/
+|   ├── [empty]
+├── FASTQ/
+│   ├── Australia_SRR17978916_1.fastq.gz
+│   ├── Australia_SRR17978916_2.fastq.gz
+│   ├── CentralAfrica_SRR21854039_1.fastq.gz
+│   ├── CentralAfrica_SRR21854039_2.fastq.gz
+│   ├── China_SRR23103754_1.fastq.gz
+│   ├── China_SRR23103754_2.fastq.gz
+│   ├── Russia_SRR26549080_1.fastq.gz
+│   ├── Russia_SRR26549080_2.fastq.gz
+│   ├── Spain_SRR24223130_1.fastq.gz
+│   ├── Spain_SRR24223130_2.fastq.gz
+│   ├── USA_SRR30674540_1.fastq.gz
+│   ├── USA_SRR30674540_2.fastq.gz
+│   ├── WestAfrica_ERR9463903_1.fastq.gz
+│   └── WestAfrica_ERR9463903_2.fastq.gz
+├── FastQC/
+│   ├── CentralAfrica_SRR21854039_1_fastqc.html
+│   ├── CentralAfrica_SRR21854039_1_fastqc.zip
+│   ├── CentralAfrica_SRR21854039_2_fastqc.html
+│   ├── CentralAfrica_SRR21854039_2_fastqc.zip
+│   ├── China_SRR23103754_1_fastqc.html
+│   ├── China_SRR23103754_1_fastqc.zip
+│   ├── China_SRR23103754_2_fastqc.html
+│   ├── China_SRR23103754_2_fastqc.zip
+│   ├── Russia_SRR26549080_1_fastqc.html
+│   ├── Russia_SRR26549080_1_fastqc.zip
+│   ├── Russia_SRR26549080_2_fastqc.html
+│   ├── Russia_SRR26549080_2_fastqc.zip
+│   ├── Spain_SRR24223130_1_fastqc.html
+│   ├── Spain_SRR24223130_1_fastqc.zip
+│   ├── Spain_SRR24223130_2_fastqc.html
+│   ├── Spain_SRR24223130_2_fastqc.zip
+│   ├── WestAfrica_ERR9463903_1_fastqc.html
+│   ├── WestAfrica_ERR9463903_1_fastqc.zip
+│   ├── WestAfrica_ERR9463903_2_fastqc.html
+│   └── WestAfrica_ERR9463903_2_fastqc.zip
+├── IndexBAM/
+|   ├── [empty]
+├── IndexVCF/
+|   ├── [empty]
+├── ReferenceGenome/
+|   ├── [empty]
+├── SNV/
+|   ├── [empty]
+├── reference_url.txt
+├── sra_list_fastq_example.tsv
+├── sra_list_fastq.tsv
+```
+
+# Results and Visualization
+Download your unzipped reference genome (.fna), .bam, .bam.bai, 
+.vcf.gz, and .vc.gz.tbi 
+files onto your local machine and open them in the IGV viewer. 
+
+The user has 
 How to interpret the output.
 Provide instructions for visualizing results in tools like IGV.
 
@@ -134,7 +272,7 @@ Provide instructions for visualizing results in tools like IGV.
 # Customize Pipeline
 
 ## Resources
-The suer can modify the default cps and memory of docker for all process, by addind the specific requirements in each of them .
+The user can modify the default cps and memory of docker for all process, by adding the specific requirements in each of them .
 This could be done by mofiying each of the modules inside the models direcotry or directly modifying the nextlfow configuration profile 
 by setting inside the docker profile the limits. For example, if the user desire is to limir cpus and memor for the RunFastQC process, 
 the following lines must be added to the nextflow configurarion file inside the docker profile with the name of the process of interes: 
