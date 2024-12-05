@@ -113,7 +113,7 @@ In contrast, WGS provides complete coverage of the genome, including both coding
 ensuring accurate detection of SNVs across the entire genome.
 
 Table 1: Overview of datasets used in the pipeline, including region, sequencing details, and biosamples.
-|------------------|----------------------|--------------|------------|------|-------------|----------------------|----------|---------|-------------------|-----------------|
+
 | Region          | SRA Accession Number | # of Spots   | # of Bases | Size | Published   | Instrument           | Strategy | Layout  | Development Stage | Biosample       |
 |------------------|----------------------|--------------|------------|------|-------------|----------------------|----------|---------|-------------------|-----------------|
 | USA             | SRR30674540          | 33,246,271   | 5G         | 3.1Gb| 2024-09-17  | Illumina HiSeq 2000 | WGS      | Paired  | adult             | SAMN43783121    |
@@ -123,7 +123,6 @@ Table 1: Overview of datasets used in the pipeline, including region, sequencing
 | Spain           | SRR24223130          | 30,664,281   | 9G         | 2.8Gb| 2024-08-31  | Illumina NovaSeq 6000| WGS      | Paired  | adult             | SAMN34257693    |
 | Central Africa  | SRR21854039          | 46,871,379   | 11.7G      | 4.4Gb| 2022-10-12  | Illumina HiSeq 4000 | WGS      | Paired  | adult             | SAMN30837313    |
 | West Africa     | ERR9463903           | 35,724,955   | 10.3G      | 3.2Gb| 2024-07-29  | Illumina NovaSeq 6000| WGS      | Paired  | adult             | SAMEA13793122   |
-|------------------|----------------------|--------------|------------|------|-------------|----------------------|----------|---------|-------------------|-----------------|
 
 
 ## Results and Visualization
