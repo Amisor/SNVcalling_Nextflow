@@ -212,7 +212,7 @@ region="Australia"
 sra_num="SRR17978916"
 
 # Download the FASTQ files using fastq-dump
-fastq-dump ${sra_num}
+fasterq-dump ${sra_num}
 
 # Obtain the first 10,000 sequences (40,000 lines) from the first FASTQ file
 head -n 40000 ${sra_num}_1.fastq > ${region}_${sra_num}_1.fastq
