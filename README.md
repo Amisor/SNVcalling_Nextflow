@@ -191,9 +191,12 @@ When you clone the github repository, you´ll have the following directories:
 SNVcalling_Nextflow/
 ├── data/
 |   ├── [some directories and files]
+├── images/
+|   ├── [some files]
 ├── modules/
 |   ├── [some directories and files]
 ├── main.nf
+├── main_no_fastq_fastqc.nf
 ├── nextflow.config
 ```
 
@@ -247,6 +250,9 @@ data/
 │   ├── WestAfrica_ERR9463903_1_fastqc.zip
 │   ├── WestAfrica_ERR9463903_2_fastqc.html
 │   ├── WestAfrica_ERR9463903_2_fastqc.zip
+├── FASTQFastQCExample
+│   ├── Australia_SRR17978916_1.fastq.gz
+│   └── README.md
 ├── IndexBAM/
 |   ├── [empty]
 ├── IndexVCF/
@@ -259,9 +265,18 @@ data/
 ├── sra_list_fastq_example.tsv
 ├── sra_list_fastq.tsv
 ```
+Now it's time to run the pipeline. There are two main files inside the SNVcalling_Nextflow directory:
+* `main.nf`: Explanation
+* `main_no_fastq_fastqc.nf`: Other explanation
 
+```diff
+- You´re about to see the files that are added to the data directory when you run the file 'main.nf'. 
+- The new files are enclosed by ** in each extreme of their names. When you run 'main_no_fastq_fastqc.nf'
+- (without running main.nf before), you'll have the same created files with the exception of 
+- **Australia_SRR17978916_1_fastqc.html** and  **Australia_SRR17978916_1_fastqc.zip** because of the explanation provided above.
+```
 
-After running main.nf you'll have the following data directory, where the new created files are highligthed in **bold**: 
+The new data directory is: 
 
 ```plaintext
 data/
