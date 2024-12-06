@@ -3,6 +3,7 @@
 This Nextflow pipeline identifies single nucleotide variants (SNVs) and indels from paired-end FASTQ files of an organism of interest.
 
 ## Table of Contents
+- [Introduction](#introduction)
 - [Workflow Overview](#workflow-overview)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -15,6 +16,31 @@ This Nextflow pipeline identifies single nucleotide variants (SNVs) and indels f
 - [Comments](#comments)
   - [Input Requirements](#input-requirements)
 - [References](#references)
+
+# Introduction
+
+Genomic variants are classified into three main categories based on size: single nucleotide variants (SNVs), 
+short insertions and deletions (indels) of less than 50 base pairs (bp), and structural variants (SVs) of 50 bp or more. 
+These variants can be detected in a high-throughput manner using whole-genome
+sequencing (WGS) data consisting of 100–300 bp short reads.
+Accurate and efficient detection of these variants is critical for a wide range of genetic, 
+clinical, and evolutionary studies.[1]
+
+Short-read sequencing for variant detection are popular, 
+particularly in multi-sample analyses, due to its lower cost and reduced requirements for DNA quality and quantity 
+compared to long-read sequencing technologies.[1] 
+Despite its limitations, short-read data has proven to be effective for identifying SNVs and indels with high reliability [2].
+
+BCFtools is a powerful suite of utilities designed to handle variant calling and manipulate Variant Call Format (VCF) 
+and Binary Call Format (BCF) files. 
+It offers functionalities for variant calling, 
+filtering, and format conversion, making it a valuable tool in genomic analyses.[2,5-6]
+
+The workflow employs BWA for indexing the reference genome and performing sequence alignment [3], 
+SAMtools for managing alignment files and removing PCR duplicates [4], 
+and BCFtools for variant calling. Together, these tools create a streamlined and scalable system 
+for efficient identification of SNVs and indels 
+with minimal user intervention.
 
 # Workflow Overview
 
@@ -30,6 +56,7 @@ The workflow includes the following steps:
 * Creates index files with BCFtools of SNVs and indels files for IGV visualization. 
 
 ![Workflow Diagram](images/DiagramNextflow.png "Workflow diagram V")
+
 
 # Requirements
 
@@ -441,4 +468,10 @@ Traté de hacer dinámica nada más no s epudo ?
 
 # References
 
-Cite tools, databases, and publications used.
+1. Liu Y, Jiang T, Gao Y, Liu B, Zang T, and Wang Y (2021). Psi-Caller: A Lightweight Short Read-Based Variant Caller With High Speed and Accuracy. *Front. Cell Dev. Biol.* 9:731424. [https://doi.org/10.3389/fcell.2021.731424](https://doi.org/10.3389/fcell.2021.731424)
+2. Abdelwahab, O., Belzile, F. & Torkamaneh, D. Performance analysis of conventional and AI-based variant callers using short and long reads. *BMC Bioinformatics* 24, 472 (2023). [https://doi.org/10.1186/s12859-023-05596-3](https://doi.org/10.1186/s12859-023-05596-3)
+3. [BWA: Burrows-Wheeler Aligner](https://bio-bwa.sourceforge.net/bwa.shtml)
+4. [SAMtools Documentation](https://www.htslib.org/doc/samtools.html)
+5. [BCFtools Documentation](https://www.htslib.org/doc/bcftools.html)
+6. [HTSlib Workflow: Filtering](https://www.htslib.org/workflow/filter.html)
+
