@@ -81,7 +81,8 @@ nextflow 24.10.1
 git 2.15.0
 ```
 
-The pipeline includes a "docker" profile that uses public Docker images, most of which are from **BioContainers**. A list of the Docker images used can be found in the [Nextflow configuration file](config/nextflow.config).
+The pipeline includes a "docker" profile that uses public Docker images, most of which are from **BioContainers**. A list of the Docker images used can be found in the 
+[Nextflow configuration file](nextflow.config).
 
 By default, no specific resource limits are assigned to Docker containers. This means they can use all available memory on the host system unless specific limits are set.
 
