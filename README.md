@@ -351,10 +351,8 @@ nextflow run main_no_fastq_fastqc.nf
 nextflow run main_no_fastq_fastqc.nf -profile docker
 ```
 
-Remember: 
-```diff
-- Run main_no_fastq_fastqc.nf with docker profile for testing the repository with Docker in less than 20 min.
-```
+Remember: **Run main_no_fastq_fastqc.nf with docker profile for testing the repository with Docker in less than 20 min.**
+
 
 The updated `data` directory after running `main.nf` is provided below. 
 All new files are enclosed in double asterisks (**) for clarity. 
