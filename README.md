@@ -168,7 +168,7 @@ The output files include:
 - **BAM Files**: Processed alignment files to remove PCR duplicates and generate the final BAM files.
 Aligned FASTQ files to the reference genome, with PCR duplicates removed (`.bam`), are stored in the [BAM](data/BAM) directory.
 - **SNVs and Indels**: Final variant call files (`.vcf.gz`) are stored in the [SNV](data/SNV) directory.
-_ ****
+
 ## Example Datasets 
 
 For this project, *Drosophila melanogaster* (fruit fly) data was used for testing. 
