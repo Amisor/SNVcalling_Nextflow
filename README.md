@@ -19,18 +19,17 @@ This Nextflow pipeline identifies single nucleotide variants (SNVs) and indels f
 # Workflow Overview
 
 The workflow includes the following steps:
-* Downloads the reference genome (`.fna`).
+* Downloads the reference genome.
 * Indexes the reference genome with BWA.
-* Downloads short-read paired sequence data (`.fastq`) with fastq-dump and compressed the files.
-* Obtains quality control metrics with FastQC (`.html, .zip`) for all paired FASTQ files.
-* Aligns paired sequence data (`.sam`) to the reference genome with BWA.
-* Converts alignments (`.sam`) to compressed format (`.bam`) with samtools.
-* Removes PCR duplicates with samtools to improve variant-calling accuracy.
-* Generates index files (`.bam.bai`) with samtools of alignment data without PCR duplicates for IGV visualization. 
-* Identifies SNVs and indels (`.vcf.gz`) with BCFtools from processed alignment data without PCR duplicates (`.bam`). 
-* Creates index files (`.vcf.gz.tbi`) with BCFtools of SNVs and indels (`.vcf.gz`) for IGV visualization. 
+* Downloads short-read paired sequence data with fastq-dump and compressed the files.
+* Obtains quality control metrics with FastQC for all paired FASTQ files.
+* Aligns paired sequence data to the reference genome with BWA.
+* Converts alignments to compressed format and removes PCR duplicates (`.bam`) with samtools.
+* Generates index files with samtools of alignment data without PCR duplicates for IGV visualization. 
+* Identifies SNVs and indels with BCFtools from the processed alignment data without PCR duplicates. 
+* Creates index files with BCFtools of SNVs and indels files for IGV visualization. 
 
-(A diagram providing the workflow )
+![Workflow Diagram](images/DiagramNextflow.png "Workflow diagram V")
 
 # Requirements
 
@@ -73,10 +72,9 @@ Change your working directory to the GitHub repository with the following comman
 cd SNVcalling_Nextflow
 ```
 
-Before running the project iwht the example data, please see seciton XX to see current structure and expected autputs
-
 # Data
 This section specifies the required input files and the expected output files for running the Nextflow pipeline.
+
 ## Input
 
 All input files must be saved in the [data](data) directory.
@@ -87,7 +85,7 @@ All input files must be saved in the [data](data) directory.
   - **sra_num**: The SRA accession numbers for downloading the FASTQ files.
 
 If the user does not wish to download the FASTQ files, only the `reference_url.txt` is required. 
-Nevertheless, the alignment process relies on the assumption that the FASTQ file names are renamed during 
+However, the alignment process relies on the assumption that the FASTQ file names are renamed during 
 the downloading process (`DownloadFastq`) based on the TSV file. This renaming step associates each region with 
 its corresponding paired FASTQ files based on the file names. Refer to [Customize Pipeline](#customize-pipeline) 
 for details about running the pipeline without downloading the FASTQ files.
@@ -95,11 +93,12 @@ for details about running the pipeline without downloading the FASTQ files.
 ## Output 
 The output files include:
 
-- **Reference Genome and Index Files**: Stored in the [Reference_Genome](data/Reference_Genome) directory.
+- **Reference genome and its index files** (`.fna, ): Stored in the [Reference_Genome](data/Reference_Genome) directory.
 - **Downloaded FASTQ Files**: Stored in the [FASTQ](data/FASTQ) directory.
-- **FastQC Analysis**: Quality control reports for FASTQ files are available in the [FastQC](data/FastQC) directory.
-- **Alignment Files**: Intermediate `.sam` files, which are processed to remove PCR duplicates and generate the final BAM files, are stored in the [Alignment](data/Alignment) directory.
-- **BAM Files**: Aligned FASTQ files to the reference genome, with PCR duplicates removed (`.bam`), are stored in the [BAM](data/BAM) directory.
+- **FastQC Analysis**: Quality control reports for FASTQ files are available in [FastQC](data/FastQC).
+- **Alignment Files**: Alignment `.sam` files stored in [Alignment](data/Alignment).
+- **BAM Files**: Processed alignment files to remove PCR duplicates and generate the final BAM files.
+Aligned FASTQ files to the reference genome, with PCR duplicates removed (`.bam`), are stored in the [BAM](data/BAM) directory.
 - **SNVs and Indels**: Final variant call files (`.vcf.gz`) are stored in the [SNV](data/SNV) directory.
 _ ****
 ## Example Datasets 
