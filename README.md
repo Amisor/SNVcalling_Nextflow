@@ -13,10 +13,9 @@ This Nextflow pipeline identifies single nucleotide variants (SNVs) and indels f
   - [Output](##output)
   - [Example Datasets](#example-datasets)
   - [Questions](##questions)
-  - [IGV visualization](#igv-visualization)
+- [Running the pipeline](#running-the-pipeline)
 - [Customize Pipeline](#customize-pipeline)
 - [Comments](#comments)
-  - [Input Requirements](#input-requirements)
 - [References](#references)
 
 # Introduction
