@@ -221,6 +221,8 @@ data/
 │   ├── WestAfrica_ERR9463903_1.fastq.gz
 │   └── WestAfrica_ERR9463903_2.fastq.gz
 ├── FastQC/
+│   ├── Australia_SRR17978916_2_fastqc.html
+│   ├── Australia_SRR17978916_2_fastqc.zip
 │   ├── CentralAfrica_SRR21854039_1_fastqc.html
 │   ├── CentralAfrica_SRR21854039_1_fastqc.zip
 │   ├── CentralAfrica_SRR21854039_2_fastqc.html
@@ -237,10 +239,14 @@ data/
 │   ├── Spain_SRR24223130_1_fastqc.zip
 │   ├── Spain_SRR24223130_2_fastqc.html
 │   ├── Spain_SRR24223130_2_fastqc.zip
+│   ├── USA_SRR30674540_1_fastqc.html
+│   ├── USA_SRR30674540_1_fastqc.zip
+│   ├── USA_SRR30674540_2_fastqc.html
+│   ├── USA_SRR30674540_2_fastqc.zip
 │   ├── WestAfrica_ERR9463903_1_fastqc.html
 │   ├── WestAfrica_ERR9463903_1_fastqc.zip
 │   ├── WestAfrica_ERR9463903_2_fastqc.html
-│   └── WestAfrica_ERR9463903_2_fastqc.zip
+│   ├── WestAfrica_ERR9463903_2_fastqc.zip
 ├── IndexBAM/
 |   ├── [empty]
 ├── IndexVCF/
@@ -253,6 +259,119 @@ data/
 ├── sra_list_fastq_example.tsv
 ├── sra_list_fastq.tsv
 ```
+
+
+After running main.nf you'll have the following data directory, where the new created files are highligthed in **bold**: 
+
+```plaintext
+data/
+├── Alignment/
+│   ├── **aligned_Australia.sam**
+│   ├── **aligned_CentralAfrica.sam**
+│   ├── **aligned_China.sam**
+│   ├── **aligned_Russia.sam**
+│   ├── **aligned_Spain.sam**
+│   ├── **aligned_USA.sam**
+│   ├── **aligned_WestAfrica.sam**
+│   └── README.md
+├── BAM/
+│   ├── **aligned_Australia_final.bam**
+│   ├── **aligned_CentralAfrica_final.bam**
+│   ├── **aligned_China_final.bam**
+│   ├── **aligned_Russia_final.bam**
+│   ├── **aligned_Spain_final.bam**
+│   ├── **aligned_USA_final.bam**
+│   ├── **aligned_WestAfrica_final.bam**
+│   └── README.md
+├── FASTQ/
+│   ├── Australia_SRR17978916_1.fastq.gz
+│   ├── Australia_SRR17978916_2.fastq.gz
+│   ├── CentralAfrica_SRR21854039_1.fastq.gz
+│   ├── CentralAfrica_SRR21854039_2.fastq.gz
+│   ├── China_SRR23103754_1.fastq.gz
+│   ├── China_SRR23103754_2.fastq.gz
+│   ├── Russia_SRR26549080_1.fastq.gz
+│   ├── Russia_SRR26549080_2.fastq.gz
+│   ├── Spain_SRR24223130_1.fastq.gz
+│   ├── Spain_SRR24223130_2.fastq.gz
+│   ├── USA_SRR30674540_1.fastq.gz
+│   ├── USA_SRR30674540_2.fastq.gz
+│   ├── WestAfrica_ERR9463903_1.fastq.gz
+│   ├── WestAfrica_ERR9463903_2.fastq.gz
+│   └── README.md
+├── FastQC/
+│   ├── **Australia_SRR17978916_1_fastqc.html**
+│   ├── **Australia_SRR17978916_1_fastqc.zip**
+│   ├── Australia_SRR17978916_2_fastqc.html
+│   ├── Australia_SRR17978916_2_fastqc.zip
+│   ├── CentralAfrica_SRR21854039_1_fastqc.html
+│   ├── CentralAfrica_SRR21854039_1_fastqc.zip
+│   ├── CentralAfrica_SRR21854039_2_fastqc.html
+│   ├── CentralAfrica_SRR21854039_2_fastqc.zip
+│   ├── China_SRR23103754_1_fastqc.html
+│   ├── China_SRR23103754_1_fastqc.zip
+│   ├── China_SRR23103754_2_fastqc.html
+│   ├── China_SRR23103754_2_fastqc.zip
+│   ├── Russia_SRR26549080_1_fastqc.html
+│   ├── Russia_SRR26549080_1_fastqc.zip
+│   ├── Russia_SRR26549080_2_fastqc.html
+│   ├── Russia_SRR26549080_2_fastqc.zip
+│   ├── Spain_SRR24223130_1_fastqc.html
+│   ├── Spain_SRR24223130_1_fastqc.zip
+│   ├── Spain_SRR24223130_2_fastqc.html
+│   ├── Spain_SRR24223130_2_fastqc.zip
+│   ├── USA_SRR30674540_1_fastqc.html
+│   ├── USA_SRR30674540_1_fastqc.zip
+│   ├── USA_SRR30674540_2_fastqc.html
+│   ├── USA_SRR30674540_2_fastqc.zip
+│   ├── WestAfrica_ERR9463903_1_fastqc.html
+│   ├── WestAfrica_ERR9463903_1_fastqc.zip
+│   ├── WestAfrica_ERR9463903_2_fastqc.html
+│   ├── WestAfrica_ERR9463903_2_fastqc.zip
+│   └── README.md
+├── FASTQFastQCExample
+│   ├── Australia_SRR17978916_1.fastq.gz
+│   └── README.md
+├── IndexBAM/
+│   ├── **aligned_Australia_final.bam.bai**
+│   ├── **aligned_CentralAfrica_final.bam.bai**
+│   ├── **aligned_China_final.bam.bai**
+│   ├── **aligned_Russia_final.bam.bai**
+│   ├── **aligned_Spain_final.bam.bai**
+│   ├── **aligned_USA_final.bam.bai**
+│   ├── **aligned_WestAfrica_final.bam.bai**
+│   └── README.md
+├── IndexVCF/
+│   ├── **Australia.vcf.gz.tbi**
+│   ├── **CentralAfrica.vcf.gz.tbi**
+│   ├── **China.vcf.gz.tbi**
+│   ├── **Russia.vcf.gz.tbi**
+│   ├── **Spain.vcf.gz.tbi**
+│   ├── **USA.vcf.gz.tbi**
+│   ├── **WestAfrica.vcf.gz.tbi**
+│   └── README.md
+├── ReferenceGenome/
+│   ├── **reference_genome.fna**
+│   ├── **reference_genome.fna.amb**
+│   ├── **reference_genome.fna.ann**
+│   ├── **reference_genome.fna.bwt**
+│   ├── **reference_genome.fna.pac**
+│   ├── **reference_genome.fna.sa**
+│   └── README.md
+├── SNV/
+│   ├── **Australia.vcf.gz**
+│   ├── **CentralAfrica.vcf.gz**
+│   ├── **China.vcf.gz**
+│   ├── **Russia.vcf.gz**
+│   ├── **Spain.vcf.gz**
+│   ├── **USA.vcf.gz**
+│   ├── **WestAfrica.vcf.gz**
+│   └── README.md
+├── reference_url.txt
+├── sra_list_fastq_example.tsv
+├── sra_list_fastq.tsv
+```
+This is <span style="color: red;">red text</span>
 
 # Results and Visualization
 Download your unzipped reference genome (.fna), .bam, .bam.bai, 
