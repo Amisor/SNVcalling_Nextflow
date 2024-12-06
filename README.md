@@ -18,24 +18,20 @@ This Nextflow pipeline identifies single nucleotide variants (SNVs) and indels f
 
 # Workflow Overview
 
-The workflow is designed to streamline the analysis and includes the following steps:
-* Fetches the reference genome and indexes with BWA it for efficient alignment.
-* Downloads short-read paired sequence data and aligns them to the reference genome with BWA.
-* Performs quality control analysis on all paired FASTQ files with FastQC.
+The workflow includes the following steps:
+* Downloads the reference genome (`.fna`).
+* Indexes the reference genome with BWA.
+* Downloads short-read paired sequence data (`.fastq`) with fastq-dump and compressed the files.
+* Obtains quality control metrics with FastQC (`.html, .zip`) for all paired FASTQ files.
+* Aligns paired sequence data (`.sam`) to the reference genome with BWA.
 * Converts alignments (`.sam`) to compressed format (`.bam`) with samtools.
 * Removes PCR duplicates with samtools to improve variant-calling accuracy.
-* Identifies SNVs and indels with BCFtools from processed alignment data.
-* Generates index files (`.bai`) with BCFtools for visualization of alignment and variant data in IGV (Integrative Genomics Viewer).
+* Generates index files (`.bam.bai`) with samtools of alignment data without PCR duplicates for IGV visualization. 
+* Identifies SNVs and indels (`.vcf.gz`) with BCFtools from processed alignment data without PCR duplicates (`.bam`). 
+* Creates index files (`.vcf.gz.tbi`) with BCFtools of SNVs and indels (`.vcf.gz`) for IGV visualization. 
 
 (A diagram providing the workflow )
 
-Comment on key features of the pipeline, such as compatibility with different tools (e.g., samtools, bcftools) and modular design.
-
-An advantage of the piepline is that if the user already ahve th fastq files i its computer and decides not to use the piple for not 
-downlading them, it can diretly use this pieleien too, actually saving pipeline time. See [Customize Pipeline](#customize-pipeline)
-
-Adjvantage of this. pipline is that because of the nature of nextfkow parallelisms, once reads from a specific region are 
-aligns it starts wotj 
 # Requirements
 
 The software dependencies in order to run this pipeline are the following:
@@ -68,14 +64,14 @@ If you want to adjust the resource allocations for this pipeline, refer to the [
 Open your terminal and placed yourself in the directory where you want to save this github repository.
 Now clone the this github repository:
 
-``
+```bash
 git clone https://github.com/Amisor/SNVcalling_Nextflow.git
-``
+```
 Change your working directory to the GitHub repository with the following command:
 
-``
+```bash
 cd SNVcalling_Nextflow
-``
+```
 
 Before running the project iwht the example data, please see seciton XX to see current structure and expected autputs
 
