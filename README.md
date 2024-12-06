@@ -7,10 +7,12 @@ This Nextflow pipeline identifies single nucleotide variants (SNVs) and indels f
 - [Workflow Overview](#workflow-overview)
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Repository Structure](#repository-structure)
 - [Data](#data)
   - [Input](##input)
   - [Output](##output)
   - [Example Datasets](#example-datasets)
+  - [Questions](##questions)
   - [IGV visualization](#igv-visualization)
 - [Customize Pipeline](#customize-pipeline)
 - [Comments](#comments)
@@ -97,6 +99,44 @@ Change your working directory to the GitHub repository with the following comman
 ```bash
 cd SNVcalling_Nextflow
 ```
+# Repository Structure
+
+### Repository Structure
+
+When you clone the GitHub repository, you’ll have the following directories and files:
+
+* `data`: Contains pre-downloaded FASTQ files and FastQC results.
+(This directory could also be empty if the user decides to download the FASTQ files and generate FastQC results using the pipeline). 
+All files created by the pipeline will be stored here in their respective subdirectories.
+* `images`: Contains images related to the project, including the workflow diagram and runtimefor the different main files.
+* `modules`: Stores the different processes used in the pipeline.
+* `main.nf`: The main pipeline file responsible for running all processes, including `DownloadFastq` (modified for providing a downloading example) and `RunFastQC` (to generate FastQC results for a single FASTQ file as an example). 
+See [Questions](#questions) for further details.
+* `main_no_fastq_fastqc.nf`: An alternative main pipeline file that excludes the `DownloadFastq` and `RunFastQC` processes. 
+It assumes all the desired FASTQ files are prestored in the `data` directory. This version is optimized for faster runtime and allows users to 
+test the pipeline in less time.
+
+- `nextflow.config`: The Nextflow configuration file specifying local resources, Docker resources, and Docker images for each process.
+
+```plaintext
+SNVcalling_Nextflow/
+├── data/
+|   ├── [some directories and files]
+├── images/
+|   ├── [some files]
+├── modules/
+|   ├── [some directories and files]
+├── main.nf
+├── main_no_fastq_fastqc.nf
+├── nextflow.config
+```
+
+Runtime of main.nf is approx of 25 min.
+![Runtime main.nf](images/Runtime_main.png "Runtime main.nf")
+
+Runtime of main_no_fastq_fastqc.nf is approx of 16 min
+![Runtime main_no_fastq_fastqc.nf](images/Runtime_main_no_fastq_fastqc.png "Runtime main_no_fastq_fastqc.nf")
+
 
 # Data
 This section specifies the required input files and the expected output files for running the Nextflow pipeline.
@@ -186,6 +226,8 @@ This will produce `${region}_${sra_num}_1.fastq.gz` and `${region}_${sra_num}_2.
 
 The reader may have the following questions:
 
+## Questions
+
 **Can I use the pipeline with downloading or without downloading the FASTQ files?**
 
 Yes. The pipeline originally is designed to download the FASTQ files. However,
@@ -212,31 +254,29 @@ Furthermore, Docker images don't not handle downloading such large files.
 The user can modify the resources allocated to the pipeline, whether running locally or with Docker, 
 in the `nextflow.config` file. For more details, see [Customize Pipeline](#customize-pipeline).
 
+**Does the pipeline obtain FastQC files?**
+
+Yes, the pipeline generates FastQC files for all regions. 
+However, running this step with Docker can take a significant amount of time. 
+To address this, a directory called `FASTQFastQCExample` was created to store only one FASTQ file 
+(`Australia_SRR17978916_1.fastq.gz`) and run the `RunFastQc` process exclusively for that file. 
+The results are added to the [FastQC](data/FastQC) directory.
+
+For more details, refer to [Running the Pipeline](#running-the-pipeline).
+
+
 # Running the pipeline
 
-When you clone the github repository, you´ll have the following directories: 
-
-```plaintext
-SNVcalling_Nextflow/
-├── data/
-|   ├── [some directories and files]
-├── images/
-|   ├── [some files]
-├── modules/
-|   ├── [some directories and files]
-├── main.nf
-├── main_no_fastq_fastqc.nf
-├── nextflow.config
-```
-
-Let's zoom in into the data directory. 
+Let's zoom in into the data directory. Noticed that the only FastQC missing files correspond to 
+`Australia_SRR17978916_1.fastq.gz` since `main.nf` gets its QC analysis for providing an example of the 
+`RunFastQC` process.
 
 ```plaintext
 data/
 ├── Alignment/
-|   ├── [empty]
+│   └── README.md
 ├── BAM/
-|   ├── [empty]
+│   └── README.md
 ├── FASTQ/
 │   ├── Australia_SRR17978916_1.fastq.gz
 │   ├── Australia_SRR17978916_2.fastq.gz
@@ -283,20 +323,18 @@ data/
 │   ├── Australia_SRR17978916_1.fastq.gz
 │   └── README.md
 ├── IndexBAM/
-|   ├── [empty]
+│   └── README.md
 ├── IndexVCF/
-|   ├── [empty]
+│   └── README.md
 ├── ReferenceGenome/
-|   ├── [empty]
+│   └── README.md
 ├── SNV/
 |   ├── [empty]
 ├── reference_url.txt
 ├── sra_list_fastq_example.tsv
 ├── sra_list_fastq.tsv
 ```
-Now it's time to run the pipeline. There are two main files inside the SNVcalling_Nextflow directory:
-* `main.nf`: Explanation
-* `main_no_fastq_fastqc.nf`: Other explanation
+You can run both main files `main.nf` and `main_no_fastq_fastqc.nf` with the docker
 
 ```diff
 - You´re about to see the files that are added to the data directory when you run the file 'main.nf'. 
