@@ -24,23 +24,22 @@ short insertions and deletions (indels) of less than 50 base pairs (bp), and str
 These variants can be detected in a high-throughput manner using whole-genome
 sequencing (WGS) data consisting of 100–300 bp short reads.
 Accurate and efficient detection of these variants is critical for a wide range of genetic, 
-clinical, and evolutionary studies.[1]
+clinical, and evolutionary studies [1].
 
 Short-read sequencing for variant detection are popular, 
 particularly in multi-sample analyses, due to its lower cost and reduced requirements for DNA quality and quantity 
-compared to long-read sequencing technologies.[1] 
+compared to long-read sequencing technologies [1]. 
 Despite its limitations, short-read data has proven to be effective for identifying SNVs and indels with high reliability [2].
 
 BCFtools is a powerful suite of utilities designed to handle variant calling and manipulate Variant Call Format (VCF) 
 and Binary Call Format (BCF) files. 
 It offers functionalities for variant calling, 
-filtering, and format conversion, making it a valuable tool in genomic analyses.[2,5-6]
+filtering, and format conversion, making it a valuable tool in genomic analyses [2, 5-6].
 
 The workflow employs BWA for indexing the reference genome and performing sequence alignment [3], 
 SAMtools for managing alignment files and removing PCR duplicates [4], 
 and BCFtools for variant calling. Together, these tools create a streamlined and scalable system 
-for efficient identification of SNVs and indels 
-with minimal user intervention.
+for efficient identification of SNVs and indels with minimal user intervention.
 
 # Workflow Overview
 
@@ -55,7 +54,7 @@ The workflow includes the following steps:
 * Identifies SNVs and indels with BCFtools from the processed alignment data without PCR duplicates. 
 * Creates index files with BCFtools of SNVs and indels files for IGV visualization. 
 
-![Workflow Diagram](images/DiagramNextflow.png "Workflow diagram V")
+![Workflow Diagram](images/DiagramNextflow.png "Workflow diagram")
 
 
 # Requirements
@@ -113,8 +112,8 @@ All input files must be saved in the [data](data) directory.
 
 If the user does not wish to download the FASTQ files, only the `reference_url.txt` is required. 
 However, the alignment process relies on the assumption that the FASTQ file names are renamed during 
-the downloading process (`DownloadFastq`) based on the TSV file. This renaming step associates each region with 
-its corresponding paired FASTQ files based on the file names. Refer to [Customize Pipeline](#customize-pipeline) 
+the downloading process (`DownloadFastq`) based on the TSV file, associating each region with 
+its corresponding paired FASTQ files. Refer to [Customize Pipeline](#customize-pipeline) 
 for details about running the pipeline without downloading the FASTQ files.
 
 ## Output 
@@ -131,11 +130,10 @@ _ ****
 ## Example Datasets 
 
 For this project, Drosophila melanogaster (fruit fly) data was used for testing. 
-The primary goal is to identify the genetic diversity within Drosophila melanogaster populations from different regions, 
-including North America, South America, Africa, Asia, Oceania, and Europe.
+The goal is to provide a pipeline to identify the genetic diversity within Drosophila melanogaster populations from different regions: North America, South America, Africa, Asia, Oceania, and Europe.
 
-The datasets were carefully selected from the NCBI Genome Database to ensure comparability. 
-All samples consist of short-read paired-end sequences from Drosophila melanogaster in the adult stage. Sequencing was performed using the Illumina platform, with data generated on different platforms. 
+The datasets were carefully selected from the NCBI SRA database to ensure comparability. 
+All samples consist of short-read paired-end sequences from Drosophila melanogaster in the adult stage. Sequencing was performed using the Illumina platform.
 If detailed information about the data is available, such as the specific country, it is stored in the region variable. However, if the data lacks such granularity, only the continent is stored.
 
 Unfortunately, no short-read sequencing genomes generated on the Illumina platform were found for South America. 
@@ -162,10 +160,10 @@ Table 1: Overview of datasets used in the pipeline, including region, sequencing
 The reader will notice that the size of each original FASTQ file is quite large. 
 To test the pipeline efficiently, I downloaded each FASTQ file and created smaller test files by extracting only the first 40,000 lines 
 from each paired FASTQ file for every region. This results in 10,000 sequences per file 
-(since a FASTQ file consists of 4 lines per sequence: sequence ID, nucleotide sequence, separator, and Phred quality scores).
+(since a FASTQ file consists of 4 lines per sequence).
 
-The smaller test files were compressed and used as input for the pipeline. The code to generate these smaller FASTQ files is not part of the pipeline; 
-it was executed separately to prepare the desired test files for pipeline functionality.
+The code to generate these smaller FASTQ files is not part of the pipeline; 
+it was executed separately to prepare the desired test files.
 
 An example of this process for the Australia dataset is provided below:
 
@@ -174,7 +172,7 @@ region="Australia"
 sra_num="SRR17978916"
 
 # Download the FASTQ files using fastq-dump
-fastq-dump --split-files ${sra_num}
+fastq-dump ${sra_num}
 
 # Obtain the first 10,000 sequences (40,000 lines) from the first FASTQ file
 head -n 40000 ${sra_num}_1.fastq > ${region}_${sra_num}_1.fastq
@@ -184,31 +182,35 @@ gzip ${region}_${sra_num}_1.fastq
 head -n 40000 ${sra_num}_2.fastq > ${region}_${sra_num}_2.fastq
 gzip ${region}_${sra_num}_2.fastq
 ```
-This will produce the desired compressed files: `${region}_${sra_num}_1.fastq.gz` and `${region}_${sra_num}_2.fastq.gz`.
+This will produce `${region}_${sra_num}_1.fastq.gz` and `${region}_${sra_num}_2.fastq.gz`.
 
 The reader may have the following questions:
+
 **Can I use the pipeline with downloading or without downloading the FASTQ files?**
+
 Yes. The pipeline originally is designed to download the FASTQ files. However,
 you can download the fastq files and placed them inside the [FASTQ](data/FASTQ) directory .
-They automallycally will be used as an input for subsequent processes, but you have to keep in mind to modify acquertly 
-the workflow of the pipeline. See  [Customize Pipeline](#customize-pipeline) 
+They automatically will be used as an input for subsequent processes, refer to [Customize Pipeline](#customize-pipeline) 
+for details.
 
 **How can I test the DownloadFastq process of the pipeline?**
 
-Because orignal fastq files are large, I added a `sra_list_fastq_example.tsv` inside [data](data) 
-file for downloading fastq files from two example regions with their respective sra accesion number whose sizes
-are muhc more smaller. The example download w paired-fastq files files from Bordatella hinzi fastq files. 
-The reader will noticed that the example employs DownloadFastqExample instead of DownloadFastq process. 
-The reason is because DownloadFastq save the files inside [FASTQ](data/FASTQ) directory, which then will be sued
-for the upcoming processes, while DownloadFastqExample has the same script as DownloadFastq  but do not publish the results 
-in the FASTQ directory. I decided to to this because if I used the same process (DownloadFastq), the Bordetella hinzi files
-would be aslso used for theAlignReads process and all the upcomong processes, which is is not only bioligcal nonsense 
-(reference from drosophilia and fastq files from bordetella), but also memorry consuming. 
+Because the original FASTQ files are large, I added a `sra_list_fastq_example.tsv` file inside the [data](data) directory 
+for downloading smaller FASTQ files from an example region with their respective SRA accession numbers. 
+This is done through the `DownloadFastqExample` process instead of the `DownloadFastq` process. 
+The `DownloadFastq` process saves the files inside the [FASTQ](data/FASTQ) directory, which are then used for subsequent processes. 
+In contrast, `DownloadFastqExample` uses the same script as `DownloadFastq` but does not publish the results in the FASTQ directory, 
+preventing the example FASTQ files from being used in the next processes. 
 
-If the user wnat so use the original DownloadFastq with the publish dear, please be aware that it's memory requirement edepends on
-the desired fifiles to download and if the process exceds the limits set in the nextflow.config, 
-the user has to modify the configuration file. Additionally, has to ensure that its equipment ahs enough memory
-to donwload and compress the desire files.
+This approach avoids biological nonsense, as the example data is from the *Bordetella hinzii* bacterium. 
+While these smaller files have a better download runtime when running the pipeline with docker, they are not suitable for alignment 
+to the *Drosophila melanogaster* reference genome and would unnecessarily consume memory.
+
+The user can modify the `main.nf` file to enable the original `DownloadFastq` process. 
+However, be aware that this requires sufficient memory capacity. 
+Furthermore, Docker images don't not handle downloading such large files. 
+The user can modify the resources allocated to the pipeline, whether running locally or with Docker, 
+in the `nextflow.config` file. For more details, see [Customize Pipeline](#customize-pipeline).
 
 # Running the pipeline
 
