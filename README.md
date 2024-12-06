@@ -329,7 +329,7 @@ data/
 ├── ReferenceGenome/
 │   └── README.md
 ├── SNV/
-|   ├── [empty]
+│   └── README.md
 ├── reference_url.txt
 ├── sra_list_fastq_example.tsv
 ├── sra_list_fastq.tsv
