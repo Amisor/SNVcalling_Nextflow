@@ -131,10 +131,10 @@ SNVcalling_Nextflow/
 ├── nextflow.config
 ```
 
-Runtime of main.nf is approx of 25 min.
+Runtime of main.nf is approx 25 min.
 ![Runtime main.nf](images/Runtime_main.png "Runtime main.nf")
 
-Runtime of main_no_fastq_fastqc.nf is approx of 16 min
+Runtime of main_no_fastq_fastqc.nf is approx 16 min
 ![Runtime main_no_fastq_fastqc.nf](images/Runtime_main_no_fastq_fastqc.png "Runtime main_no_fastq_fastqc.nf")
 
 
@@ -169,7 +169,7 @@ Aligned FASTQ files to the reference genome, with PCR duplicates removed (`.bam`
 _ ****
 ## Example Datasets 
 
-For this project, Drosophila melanogaster (fruit fly) data was used for testing. 
+For this project, *Drosophila melanogaster* (fruit fly) data was used for testing. 
 The goal is to provide a pipeline to identify the genetic diversity within Drosophila melanogaster populations from different regions: North America, South America, Africa, Asia, Oceania, and Europe.
 
 The datasets were carefully selected from the NCBI SRA database to ensure comparability. 
@@ -267,7 +267,7 @@ For more details, refer to [Running the Pipeline](#running-the-pipeline).
 
 # Running the pipeline
 
-Let's zoom in into the data directory. Noticed that the only FastQC missing files correspond to 
+Let's zoom in into the data directory. Noticed that the only FastQC missing file correspond to 
 `Australia_SRR17978916_1.fastq.gz` since `main.nf` gets its QC analysis for providing an example of the 
 `RunFastQC` process.
 
@@ -334,16 +334,31 @@ data/
 ├── sra_list_fastq_example.tsv
 ├── sra_list_fastq.tsv
 ```
-You can run both main files `main.nf` and `main_no_fastq_fastqc.nf` with the docker
+You can run both main files `main.nf` and `main_no_fastq_fastqc.nf` with or without docker. 
+The instructions are provided below: 
+````
+# Run main without Docker
+nextflow run main.nf
 
-```diff
-- You´re about to see the files that are added to the data directory when you run the file 'main.nf'. 
-- The new files are enclosed by ** in each extreme of their names. When you run 'main_no_fastq_fastqc.nf'
-- (without running main.nf before), you'll have the same created files with the exception of 
-- **Australia_SRR17978916_1_fastqc.html** and  **Australia_SRR17978916_1_fastqc.zip** because of the explanation provided above.
+# Run main with Docker
+nextflow run main.nf -profile docker
+
+# Run main_no_fastq_fastqc without Docker
+nextflow run main_no_fastq_fastqc.nf
+
+# Run main_no_fastq_fastqc with Docker
+nextflow run main_no_fastq_fastqc.nf -profile docker
 ```
 
-The new data directory is: 
+```diff
+- Run main_no_fastq_fastqc.nf with docker profile for testing the repository with Docker in less than 20 min.
+```
+
+The updated `data` directory after running `main.nf` is provided below. 
+All new files are enclosed in double asterisks (**) for clarity. 
+If you run `main_no_fastq_fastqc.nf`, the resulting `data` directory will be the same, 
+except for the missing files Australia_SRR17978916_1_fastqc.html and Australia_SRR17978916_1_fastqc.zip, 
+as the `RunFastQC` process is not tested in this configuration.
 
 ```plaintext
 data/
@@ -454,41 +469,74 @@ data/
 ├── sra_list_fastq.tsv
 ```
 
-```diff
-- text in red
-```
-
 # Results and Visualization
-Download your unzipped reference genome (.fna), .bam, .bam.bai, 
-.vcf.gz, and .vc.gz.tbi 
-files onto your local machine and open them in the IGV viewer. 
 
-The user has 
-How to interpret the output.
-Provide instructions for visualizing results in tools like IGV.
+To visualize the results in IGV, you will need the following files:
+- The unzipped reference genome (`.fna`).
+- Aligned BAM files for each region (`aligned_region_final.bam`) and their index files (`.bam.bai`).
+- The SNV and indel files (`.vcf.gz`) and their index files (`.vcf.gz.tbi`).
 
+**Are you new to IGV?** 
+
+Install the Integrative Genomics Viewer (IGV) from the [IGV website](https://software.broadinstitute.org/software/igv/).
+
+Open IGV and select the genome dropdown menu. Choose "Load Genome from File" and navigate to your `.fna` file.
+Drag and drop or use "File > Load from File" to load your `aligned_region_final.bam` files along with their `.bam.bai` index files.
+Similarly, load your `.vcf.gz` files along with their `.vcf.gz.tbi` index files.
+Use the search bar in IGV to navigate to specific regions of interest and examine alignments, SNVs, and indels.
+
+For more detailed instructions, refer to the [IGV User Guide](https://software.broadinstitute.org/software/igv/UserGuide).
 
 # Customize Pipeline
 
 ## Resources
-The user can modify the default cps and memory of docker for all process, by adding the specific requirements in each of them .
-This could be done by mofiying each of the modules inside the models direcotry or directly modifying the nextlfow configuration profile 
-by setting inside the docker profile the limits. For example, if the user desire is to limir cpus and memor for the RunFastQC process, 
-the following lines must be added to the nextflow configurarion file inside the docker profile with the name of the process of interes: 
+The user can modify the default CPU and memory limits for Docker in all processes by adding specific requirements. This can be achieved by
+editing the Nextflow configuration file (`nextflow.config`) by setting the limits inside (or outside for running wihout docker) the Docker profile.
+
+For example, if the user wants to limit CPUs and memory for the `RunFastQC` process, the following lines must be added to the `nextflow.config` file inside the Docker profile under the name of the process:
+
+```groovy
+process {
+    withName: 'RunFastQC' {
+        cpus = 2
+        memory = '4 GB'
+    }
+}
+```
+
+## Output directory and input files
+
+The user can also modify the outDir parameter in the configuration file to specify a custom output directory 
+for storing pipeline files. Additionally, the location and names of input files can be changed in the configuration 
+file as needed.
+
+To make these changes:
+
+-Open the nextflow.config file.
+-Adjust the outDir parameter to the desired output directory.
+-Update paths or names for input files under the relevant sections.
+These changes allow users to customize the pipeline to suit their specific hardware and data requirements.
+
+## Not Downloading FASTQ Files
+
+If the user wants to provide their own FASTQ files, ensure they are saved in the [FASTQ](data/FASTQ) directory.
+If you do not want to run the `RunFastQC` process to obtain quality control (QC) analyses, 
+simply execute the pipeline using the `main_no_fastq_fastqc.nf` file: `nextflow run main_no_fastq_fastqc.nf` or 
+`nextflow run main_no_fastq_fastqc.nf -profile docker`
 
 
-cpus = 2
-memory = '4 GB'
-        
-Describe how users can modify parameters, add modules, or change configurations.
-Common issues (e.g., "What should I do if the pipeline crashes?" or "How do I specify a custom genome?").
+If you want to include the `RunFastQC` process to generate QC analyses for your provided FASTQ files, 
+you will need to modify the `main_no_fastq_fastqc.nf` file. Open the file in your terminal or any text editor. 
+For example `nano main_no_fastq_fastqc.nf`. Navigate to line 65 and uncomment the following line:
+`// fastqc_channel = RunFastQC(fastq_channel)` by removing the // characters. Save the changes and exit the editor.
+Now run `main_no_fastq_fastqc.nf`.
 
-## Not downloading Fastq files 
-when testing the 
+Make sure that your FASTQ file names comply with the requirements specified in the TSV file 
+to associate regions with their FASTQ files. 
 
 # Comments
 
-### Input Requirements
+## Input Requirements
 
 - **sra_lst_fast.tsv**: The requirement to avoid underscores (`_`) in region names is due to how the pipeline handles file naming and pairing. 
 In the workflow, the `paired_fastq_channel` associates regions with their paired FASTQ files by splitting file names using the underscore character (`_`). 
@@ -498,13 +546,7 @@ Additionally, the SRA accession numbers naturally do not contain underscores, wh
 Spaces in region names are also problematic because they can cause errors during the alignment process. For instance, a file named `region otherpartofregion_SRA12345_1.fastq.gz` would include a space, 
 and during BWA alignment, this might be misinterpreted as an attempt to provide an additional option rather than being part of the file name. To reduce errors and ensure smooth execution, 
 it is recommended to avoid using spaces or underscores in region names. Instead, use simple alphanumeric characters for consistency and to minimize pipeline issues.
-
-Remove alignment publish Dir if not wnat to save this files as I know that this might not be useful and use space in memory
-
-## Sobre example 
-
-Acerca de publish dir y de downloadign fastq files ;( - ve cuanot tiempo te toma hacer esto 
-Traté de hacer dinámica nada más no s epudo ? 
+- **reference_url.txt**: The url most be quoted.
 
 # References
 
