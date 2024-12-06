@@ -371,8 +371,10 @@ data/
 ├── sra_list_fastq_example.tsv
 ├── sra_list_fastq.tsv
 ```
-This is <span style="color: red;">red text</span>
-- ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) `Hola`
+
+```diff
+- text in red
+```
 
 # Results and Visualization
 Download your unzipped reference genome (.fna), .bam, .bam.bai, 
