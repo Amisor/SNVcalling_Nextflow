@@ -56,6 +56,7 @@ The workflow includes the following steps:
 * Identifies SNVs and indels with BCFtools from the processed alignment data without PCR duplicates. 
 * Creates index files with BCFtools of SNVs and indels files for IGV visualization. 
 
+Workflow Diagram
 ![Workflow Diagram](images/DiagramNextflow.png "Workflow diagram")
 
 
