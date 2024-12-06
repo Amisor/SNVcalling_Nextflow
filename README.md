@@ -161,7 +161,7 @@ for details about running the pipeline without downloading the FASTQ files.
 ## Output 
 The output files include:
 
-- **Reference genome and its index files** (`.fna, ): Stored in the [Reference_Genome](data/Reference_Genome) directory.
+- **Reference genome and its index files** (`.fna, ): Stored in the [ReferenceGenome](data/ReferenceGenome) directory.
 - **Downloaded FASTQ Files**: Stored in the [FASTQ](data/FASTQ) directory.
 - **FastQC Analysis**: Quality control reports for FASTQ files are available in [FastQC](data/FastQC).
 - **Alignment Files**: Alignment `.sam` files stored in [Alignment](data/Alignment).
