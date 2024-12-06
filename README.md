@@ -337,7 +337,7 @@ data/
 You can run both main files `main.nf` and `main_no_fastq_fastqc.nf` with or without docker. 
 The instructions are provided below: 
 
-````bash
+```bash
 # Run main without Docker
 nextflow run main.nf
 
@@ -351,7 +351,8 @@ nextflow run main_no_fastq_fastqc.nf
 nextflow run main_no_fastq_fastqc.nf -profile docker
 ```
 
-Remember: **Run main_no_fastq_fastqc.nf with docker profile for testing the repository with Docker in less than 20 min.**
+Remember: 
+**Run main_no_fastq_fastqc.nf with docker profile for testing the repository with Docker in less than 20 min.**
 
 
 The updated `data` directory after running `main.nf` is provided below. 
