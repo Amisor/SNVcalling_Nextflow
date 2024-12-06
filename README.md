@@ -513,10 +513,9 @@ file as needed.
 
 To make these changes:
 
--Open the nextflow.config file.
--Adjust the outDir parameter to the desired output directory.
--Update paths or names for input files under the relevant sections.
-These changes allow users to customize the pipeline to suit their specific hardware and data requirements.
+*Open the nextflow.config file.
+*Adjust the outDir parameter to the desired output directory.
+*Update paths or names for input files under the relevant sections.
 
 ## Not Downloading FASTQ Files
 
