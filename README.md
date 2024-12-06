@@ -14,7 +14,7 @@ This Nextflow pipeline identifies single nucleotide variants (SNVs) and indels f
   - [Example Datasets](#example-datasets)
   - [Questions](##questions)
 - [Running the pipeline](#running-the-pipeline)
-- [Results and Visualization]($results-and-visualization)
+- [IGV Visualization](#igv-visualization)
 - [Customize Pipeline](#customize-pipeline)
 - [Comments](#comments)
 - [References](#references)
@@ -471,7 +471,7 @@ data/
 ├── sra_list_fastq.tsv
 ```
 
-# Results and Visualization
+# IGV Visualization
 
 To visualize the results in IGV, you will need the following files:
 - The unzipped reference genome (`.fna`).
